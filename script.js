@@ -137,3 +137,4 @@ function resetForm() {
     document.getElementById('cgpa').textContent = '0.00';
     clearForm();
 }
+
