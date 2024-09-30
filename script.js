@@ -2,39 +2,33 @@ let subjects = [];
 let editIndex = -1;
 
 function addSubject() {
-    const subjectInput = 
-        document.getElementById('subject');
-    const grade = 
-        document.getElementById('grade').value;
-    const creditInput = 
-        document.getElementById('credit');
-    const credit = 
-        parseInt(creditInput.value);
+    const subjectInput = document.getElementById('subject');
+    const grade = document.getElementById('grade').value;
+    const creditInput = document.getElementById('credit');
+    const credit = parseInt(creditInput.value, 10); // Specify base 10 for parseInt
 
-    // Validate credit input
-    const inputError = 
-        document.getElementById('inputError')
-    const creditError = 
-        document.getElementById('creditError');
+    // Validate input
+    const inputError = document.getElementById('inputError');
+    const creditError = document.getElementById('creditError');
+
+    // Clear previous error messages
+    inputError.textContent = '';
+    creditError.textContent = '';
+
     if (!subjectInput.value || isNaN(credit)) {
-        inputError.textContent = 
-            'Please fill out all fields.';
+        inputError.textContent = 'Please fill out all fields.';
         return;
     }
-    else if (credit < 1 || credit > 20) {
-        creditError.textContent = 
-            'Credit must be between 1 and 20';
+    if (credit < 1 || credit > 20) {
+        creditError.textContent = 'Credit must be between 1 and 20';
         return;
-    } else {
-        creditError.textContent = '';
     }
+
     if (editIndex !== -1) {
-        subjects[editIndex] = 
-        { subject: subjectInput.value, grade, credit };
-        editIndex = -1;
+        subjects[editIndex] = { subject: subjectInput.value, grade, credit };
+        editIndex = -1; // Reset edit index after updating
     } else {
-        subjects.push(
-            { subject: subjectInput.value, grade, credit });
+        subjects.push({ subject: subjectInput.value, grade, credit });
     }
 
     displaySubjects();
@@ -42,8 +36,7 @@ function addSubject() {
 }
 
 function displaySubjects() {
-    const subjectList = 
-        document.getElementById('subjectList');
+    const subjectList = document.getElementById('subjectList');
     subjectList.innerHTML = '';
 
     subjects.forEach((s, index) => {
@@ -59,6 +52,7 @@ function displaySubjects() {
         creditCell.textContent = s.credit;
 
         const actionCell = document.createElement('td');
+
         const editButton = document.createElement('button');
         editButton.className = 'edit';
         editButton.textContent = 'Edit';
@@ -82,17 +76,14 @@ function displaySubjects() {
 }
 
 function editSubject(index) {
-    const subjectInput = 
-        document.getElementById('subject');
+    const subjectInput = document.getElementById('subject');
     const selectedSubject = subjects[index];
 
     subjectInput.value = selectedSubject.subject;
-    document.getElementById('grade').value = 
-        selectedSubject.grade;
-    document.getElementById('credit').value = 
-        selectedSubject.credit;
+    document.getElementById('grade').value = selectedSubject.grade;
+    document.getElementById('credit').value = selectedSubject.credit;
 
-    editIndex = index;
+    editIndex = index; // Set the edit index for updating
 }
 
 function deleteSubject(index) {
@@ -101,13 +92,10 @@ function deleteSubject(index) {
 }
 
 function calculateCGPA() {
-    const totalCredits = subjects.reduce(
-    (sum, s) => sum + s.credit, 0);
-    const weightedSum = subjects.reduce(
-    (sum, s) => sum + getGradePoint(s.grade) * s.credit, 0);
+    const totalCredits = subjects.reduce((sum, s) => sum + s.credit, 0);
+    const weightedSum = subjects.reduce((sum, s) => sum + getGradePoint(s.grade) * s.credit, 0);
 
-    const cgpa = totalCredits === 0 ? 0 : 
-    (weightedSum / totalCredits).toFixed(2);
+    const cgpa = totalCredits === 0 ? 0 : (weightedSum / totalCredits).toFixed(2);
     document.getElementById('cgpa').textContent = cgpa;
 }
 
@@ -120,13 +108,13 @@ function getGradePoint(grade) {
         case 'C': return 7.0;
         case 'D': return 6.0;
         case 'F': return 0.0;
-        default: return 0.0;
+        default: return 0.0; // Handle unexpected grades
     }
 }
 
 function clearForm() {
     document.getElementById('subject').value = '';
-    document.getElementById('grade').value = 'A';
+    document.getElementById('grade').value = ''; // Reset to no selection
     document.getElementById('credit').value = '';
 }
 
@@ -137,3 +125,4 @@ function resetForm() {
     document.getElementById('cgpa').textContent = '0.00';
     clearForm();
 }
+
